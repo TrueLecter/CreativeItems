@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +16,7 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.EnderChest;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Base extends JavaPlugin implements Listener {
@@ -66,7 +68,8 @@ public class Base extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onInventoryOpenEvent(InventoryDragEvent e) {
-		if (e.getInventory().getHolder() instanceof Chest || e.getInventory().getHolder() instanceof DoubleChest) {
+		if (e.getInventory().getHolder() instanceof Chest || e.getInventory().getHolder() instanceof DoubleChest
+				|| e.getInventory().getHolder() instanceof Dispenser || e.getInventory().getHolder() instanceof EnderChest) {
 			if (e.getWhoClicked().getGameMode().equals(GameMode.CREATIVE)) {
 				if (!e.getWhoClicked().hasPermission("nameinlore.creative")) {
 					ItemStack i = e.getCursor();
@@ -91,7 +94,8 @@ public class Base extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onInventoryOpenEvent(InventoryMoveItemEvent e) {
-		if (e.getInitiator().getHolder() instanceof Chest || e.getInitiator().getHolder() instanceof DoubleChest) {
+		if (e.getInitiator().getHolder() instanceof Chest || e.getInitiator().getHolder() instanceof DoubleChest
+				|| e.getInitiator().getHolder() instanceof Dispenser || e.getInitiator().getHolder() instanceof EnderChest) {
 			if (e.getInitiator().getViewers().get(0).getGameMode().equals(GameMode.CREATIVE)) {
 				if (!e.getInitiator().getViewers().get(0).hasPermission("nameinlore.creative")) {
 					ItemStack i = e.getItem();
@@ -112,7 +116,8 @@ public class Base extends JavaPlugin implements Listener {
 				}
 			}
 		}
-		if (e.getDestination().getHolder() instanceof Chest || e.getDestination().getHolder() instanceof DoubleChest) {
+		if (e.getInitiator().getHolder() instanceof Chest || e.getInitiator().getHolder() instanceof DoubleChest
+				|| e.getInitiator().getHolder() instanceof Dispenser || e.getInitiator().getHolder() instanceof EnderChest) {
 			if (e.getDestination().getViewers().get(0).getGameMode().equals(GameMode.CREATIVE)) {
 				if (!e.getDestination().getViewers().get(0).hasPermission("nameinlore.creative")) {
 					ItemStack i = e.getItem();
