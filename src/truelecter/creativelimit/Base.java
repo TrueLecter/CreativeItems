@@ -6,26 +6,18 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.EnderChest;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Base extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onDrop(PlayerDropItemEvent e) {
-		// System.out.println(e.getPlayer().getName() + " dropped "
-		// + e.getItemDrop().getItemStack().getType().toString() +
-		// " in gamemode "
-		// + e.getPlayer().getGameMode().toString());
 		if (e.getPlayer().getGameMode() == GameMode.SURVIVAL) {
 			if (!e.getPlayer().hasPermission("nameinlore.survival")) {
 				return;
@@ -37,11 +29,11 @@ public class Base extends JavaPlugin implements Listener {
 				lore = new ArrayList<String>();
 			}
 			for (int ia = 0; ia < lore.size(); ia++) {
-				if (lore.get(ia).contains("Выкинул")) {
+				if (lore.get(ia).contains("Создал")) {
 					return;
 				}
 			}
-			lore.add(ChatColor.translateAlternateColorCodes('&', "&6Выкинул &b") + e.getPlayer().getName());
+			lore.add(ChatColor.translateAlternateColorCodes('&', "&6Создал &b") + e.getPlayer().getName());
 			meta.setLore(lore);
 			i.setItemMeta(meta);
 		}
@@ -56,87 +48,67 @@ public class Base extends JavaPlugin implements Listener {
 				lore = new ArrayList<String>();
 			}
 			for (int ia = 0; ia < lore.size(); ia++) {
-				if (lore.get(ia).contains("Выкинул")) {
+				if (lore.get(ia).contains("Создал")) {
 					return;
 				}
 			}
-			lore.add("§6Выкинул §b" + e.getPlayer().getName());
+			lore.add("§6Создал §b" + e.getPlayer().getName());
 			meta.setLore(lore);
 			i.setItemMeta(meta);
 		}
 	}
 
 	@EventHandler
-	public void onInventoryOpenEvent(InventoryDragEvent e) {
-		if (e.getInventory().getHolder() instanceof Chest || e.getInventory().getHolder() instanceof DoubleChest
-				|| e.getInventory().getHolder() instanceof Dispenser || e.getInventory().getHolder() instanceof EnderChest) {
-			if (e.getWhoClicked().getGameMode().equals(GameMode.CREATIVE)) {
-				if (!e.getWhoClicked().hasPermission("nameinlore.creative")) {
-					ItemStack i = e.getCursor();
-					ItemMeta meta = i.getItemMeta();
-					List<String> lore = meta.getLore();
-					if (lore == null) {
-						lore = new ArrayList<String>();
-					}
-					for (int ia = 0; ia < lore.size(); ia++) {
-						if (lore.get(ia).contains("Выкинул")) {
-							return;
-						}
-					}
-					lore.add("§6Выкинул §b" + e.getWhoClicked().getName());
-					meta.setLore(lore);
-					i.setItemMeta(meta);
+	public void Creative(InventoryCreativeEvent e) {
+		if (e.getWhoClicked().hasPermission("nameinlore.creative")) {
+			ItemStack i = e.getCursor();
+			if (i == null) {
+				return;
+			}
+			ItemMeta meta = i.getItemMeta();
+			if (meta == null) {
+				return;
+			}
+			List<String> lore = meta.getLore();
+			if (lore == null) {
+				lore = new ArrayList<String>();
+			}
+			for (int ia = 0; ia < lore.size(); ia++) {
+				if (lore.get(ia).contains("Создал")) {
 					return;
 				}
 			}
+			lore.add("§6Создал §b" + e.getWhoClicked().getName());
+			meta.setLore(lore);
+			i.setItemMeta(meta);
+			return;
 		}
 	}
-
+	
 	@EventHandler
-	public void onInventoryOpenEvent(InventoryMoveItemEvent e) {
-		if (e.getInitiator().getHolder() instanceof Chest || e.getInitiator().getHolder() instanceof DoubleChest
-				|| e.getInitiator().getHolder() instanceof Dispenser || e.getInitiator().getHolder() instanceof EnderChest) {
-			if (e.getInitiator().getViewers().get(0).getGameMode().equals(GameMode.CREATIVE)) {
-				if (!e.getInitiator().getViewers().get(0).hasPermission("nameinlore.creative")) {
-					ItemStack i = e.getItem();
-					ItemMeta meta = i.getItemMeta();
-					List<String> lore = meta.getLore();
-					if (lore == null) {
-						lore = new ArrayList<String>();
-					}
-					for (int ia = 0; ia < lore.size(); ia++) {
-						if (lore.get(ia).contains("Выкинул")) {
-							return;
-						}
-					}
-					lore.add("§6Выкинул §b" + e.getInitiator().getViewers().get(0).getName());
-					meta.setLore(lore);
-					i.setItemMeta(meta);
+	public void onInventoryClickt(InventoryClickEvent e) {
+		if (e.getWhoClicked().hasPermission("nameinlore.creative")){
+			ItemStack i = e.getCurrentItem();
+			if (i == null) {
+				return;
+			}
+			ItemMeta meta = i.getItemMeta();
+			if (meta == null) {
+				return;
+			}
+			List<String> lore = meta.getLore();
+			if (lore == null) {
+				lore = new ArrayList<String>();
+			}
+			for (int ia = 0; ia < lore.size(); ia++) {
+				if (lore.get(ia).contains("Создал")) {
 					return;
 				}
 			}
-		}
-		if (e.getInitiator().getHolder() instanceof Chest || e.getInitiator().getHolder() instanceof DoubleChest
-				|| e.getInitiator().getHolder() instanceof Dispenser || e.getInitiator().getHolder() instanceof EnderChest) {
-			if (e.getDestination().getViewers().get(0).getGameMode().equals(GameMode.CREATIVE)) {
-				if (!e.getDestination().getViewers().get(0).hasPermission("nameinlore.creative")) {
-					ItemStack i = e.getItem();
-					ItemMeta meta = i.getItemMeta();
-					List<String> lore = meta.getLore();
-					if (lore == null) {
-						lore = new ArrayList<String>();
-					}
-					for (int ia = 0; ia < lore.size(); ia++) {
-						if (lore.get(ia).contains("Выкинул")) {
-							return;
-						}
-					}
-					lore.add("§6Выкинул §b" + e.getDestination().getViewers().get(0).getName());
-					meta.setLore(lore);
-					i.setItemMeta(meta);
-					return;
-				}
-			}
+			lore.add("§6Создал §b" + e.getWhoClicked().getName());
+			meta.setLore(lore);
+			i.setItemMeta(meta);
+			return;
 		}
 	}
 
